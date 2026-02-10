@@ -77,7 +77,7 @@ Prerequisites
 
 Install
 
-git clone https://github.com/your-username/tipjar-stx.git
+git clone https://github.com/uniquebeing-base-eth/stx-tip-jar.git
 cd tipjar-stx
 npm install
 
