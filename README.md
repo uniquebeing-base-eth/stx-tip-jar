@@ -1,73 +1,126 @@
-# Welcome to your Lovable project
+# TipJar STX
 
-## Project info
+A simple onchain STX Tip Jar built on the Stacks blockchain.
+Anyone can create a tip jar, receive STX tips, and withdraw their earnings directly to their wallet.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+No tokens. No NFTs. Just pure STX.
 
-## How can I edit this code?
 
-There are several ways of editing your application.
+#  What is TipJar STX
 
-**Use Lovable**
+TipJar STX allows creators, builders, and communities to:
+	•	Create a public tip jar using their Stacks wallet
+	•	Receive STX tips from anyone
+	•	Withdraw funds anytime without intermediaries
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+All transactions are transparent and secured by the Stacks blockchain.
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+# Features
+	•	Stacks wallet connection (Leather and Hiro)
+	•	One tip jar per wallet address
+	•	Send STX tips to any jar
+	•	Onchain balance tracking
+	•	Owner-only withdrawals
+	•	Mobile-friendly UI
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Tech Stack
+	•	Blockchain: Stacks
+	•	Smart Contracts: Clarity
+	•	Wallet Integration: Stacks Connect
+	•	Frontend: React or Next.js
+	•	Network: Stacks Testnet and Mainnet
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Smart Contract Overview
+
+Core Functions
+	•	create-jar
+Registers the caller as a tip jar owner.
+	•	tip
+Sends STX to a specified tip jar.
+	•	withdraw
+Allows the jar owner to withdraw their full balance.
+
+Rules
+	•	STX only
+	•	No admin privileges
+	•	Funds are held by the contract until withdrawn
+	•	Only the jar owner can withdraw
+
+
+#  Frontend Pages
+	•	Home
+	•	Connect wallet
+	•	Create tip jar
+	•	Find a tip jar by address
+	•	Tip Jar Page
+	•	Display jar owner
+	•	Show total STX received
+	•	Tip input and send button
+	•	Dashboard
+	•	Owner balance
+	•	Withdraw funds
+
+
+# Local Development
+
+Prerequisites
+	•	Node.js
+	•	Yarn or npm
+	•	Clarinet
+	•	Leather or Hiro wallet
+
+Install
+
+git clone https://github.com/your-username/tipjar-stx.git
+cd tipjar-stx
+npm install
+
+Run Frontend
+
 npm run dev
-```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
 
-**Use GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+#  Smart Contract Testing
 
-## What technologies are used for this project?
+clarinet check
+clarinet test
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+# Deployment
+	1.	Deploy the Clarity contract to Stacks testnet
+	2.	Update the contract address in the frontend
+	3.	Test wallet interactions
+	4.	Deploy frontend
+	5.	Deploy contract to mainnet
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+#  Security Notes
+	•	Only jar owners can withdraw funds
+	•	Contract uses native STX transfers
+	•	No reentrancy risks due to Clarity execution model
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+📄 License
+
+MIT License
+
+
+🤝 Contributing
+
+Pull requests are welcome.
+For major changes, please open an issue first to discuss improvements.
+
+🧡 Built on Stacks
+
+TipJar STX is built to support the Stacks ecosystem and encourage direct, permissionless creator support.
