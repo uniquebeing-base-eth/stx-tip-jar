@@ -32,7 +32,11 @@ export function Header() {
             </Button>
           </div>
         ) : (
-          <Button onClick={connect} disabled={isConnecting} className="gradient-gold text-primary-foreground">
+          <Button
+            onClick={connect}
+            disabled={isConnecting}
+            className="gradient-gold text-primary-foreground flex items-center"
+          >
             {isConnecting ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
