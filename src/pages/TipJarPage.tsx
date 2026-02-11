@@ -1,3 +1,4 @@
+
 import { useParams } from 'react-router-dom';
 import { TipJarCard } from '@/components/TipJarCard';
 import { useWallet } from '@/context/WalletContext';
