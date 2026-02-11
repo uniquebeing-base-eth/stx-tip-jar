@@ -13,10 +13,16 @@ interface TipJarCardProps {
   isOwner?: boolean;
 }
 
-export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJarCardProps) {
+export function TipJarCard({
+  ownerAddress,
+  balance = 0,
+  isOwner = false,
+}: TipJarCardProps) {
   const { wallet, connect } = useWallet();
   const [amount, setAmount] = useState('');
   const [isSending, setIsSending] = useState(false);
+
+  const quickAmounts = [1, 5, 10, 25];
 
   const handleTip = async () => {
     if (!wallet) {
@@ -38,7 +44,8 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
           description: 'Transaction submitted to the network',
           action: {
             label: 'View',
-            onClick: () => window.open(`https://explorer.stacks.co/txid/${txId}`, '_blank'),
+            onClick: () =>
+              window.open(`https://explorer.stacks.co/txid/${txId}`, '_blank'),
           },
         });
         setAmount('');
@@ -52,10 +59,8 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
     }
   };
 
-  const quickAmounts = [1, 5, 10, 25];
-
   return (
-    <Card className="w-full max-w-md shadow-glow border-2 border-gold/20">
+    <Card className="w-full max-w-md shadow-glow border-2 border-gold/20 hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="text-center pb-2">
         <CardTitle className="font-display text-2xl">
           {isOwner ? 'Your Tip Jar' : 'Send a Tip'}
@@ -64,7 +69,9 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
           {formatAddress(ownerAddress)}
         </p>
       </CardHeader>
-      <CardContent className="space-y-4">
+
+      <CardContent className="space-y-5">
+        {/* Total Balance */}
         <div className="text-center py-4">
           <p className="text-sm text-muted-foreground">Total Received</p>
           <p className="text-4xl font-display font-bold text-gradient-gold">
@@ -72,15 +79,17 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
           </p>
         </div>
 
+        {/* Tip Controls */}
         {!isOwner && (
-          <>
+          <div className="space-y-3">
+            {/* Quick Amount Buttons */}
             <div className="flex gap-2">
               {quickAmounts.map((amt) => (
                 <Button
                   key={amt}
                   variant="outline"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 hover:bg-yellow-50"
                   onClick={() => setAmount(amt.toString())}
                 >
                   {amt} STX
@@ -88,6 +97,7 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
               ))}
             </div>
 
+            {/* Custom Amount Input + Tip Button */}
             <div className="flex gap-2">
               <Input
                 type="number"
@@ -101,21 +111,22 @@ export function TipJarCard({ ownerAddress, balance = 0, isOwner = false }: TipJa
               <Button
                 onClick={handleTip}
                 disabled={isSending}
-                className="gradient-gold text-primary-foreground px-6"
+                className="flex items-center gap-2 px-6 gradient-gold text-primary-foreground"
               >
                 {isSending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <Heart className="w-4 h-4 mr-2" />
+                    <Heart className="w-4 h-4" />
                     Tip
                   </>
                 )}
               </Button>
             </div>
-          </>
+          </div>
         )}
 
+        {/* Explorer Link */}
         <a
           href={`https://explorer.stacks.co/address/${ownerAddress}`}
           target="_blank"
