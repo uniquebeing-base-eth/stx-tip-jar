@@ -15,9 +15,9 @@ export default function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Mock state - in production, fetch from contract
+  // Mock state - replace with real contract data in production
   const [hasJar] = useState(true);
-  const balance = 125.5; // Mock balance
+  const balance = 125.5;
 
   if (!wallet) {
     return (
