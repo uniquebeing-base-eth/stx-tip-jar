@@ -8,6 +8,7 @@ import { sendTip, stxToMicroStx, formatAddress } from '@/lib/stacks';
 import { Loader2, Heart, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
+
 interface TipJarCardProps {
   ownerAddress: string;
   balance?: number;
