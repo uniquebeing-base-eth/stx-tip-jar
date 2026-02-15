@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { TipJarCard } from '@/components/TipJarCard';
 import { useWallet } from '@/context/WalletContext';
 
+
 export default function TipJarPage() {
   const { address } = useParams<{ address: string }>();
   const { wallet } = useWallet();
