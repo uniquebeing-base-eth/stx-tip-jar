@@ -6,6 +6,7 @@ import { formatAddress } from '@/lib/stacks';
 import logo from '@/assets/logo.png';
 import { Loader2, LogOut, Wallet } from 'lucide-react';
 
+
 export function Header() {
   const { wallet, isConnecting, connect, disconnect } = useWallet();
 
