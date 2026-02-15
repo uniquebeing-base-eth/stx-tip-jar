@@ -6,6 +6,7 @@ export const CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
 export const CONTRACT_NAME = 'stx-tip-jar';
 export const NETWORK = 'mainnet';
 
+
 export interface WalletData {
   stxAddress: string;
   btcAddress?: string;
