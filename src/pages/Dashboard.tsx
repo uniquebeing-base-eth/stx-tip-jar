@@ -8,6 +8,7 @@ import { Loader2, Copy, Check, ExternalLink, Sparkles, ArrowDownToLine, Share2 }
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 
+
 export default function Dashboard() {
   const { wallet, connect } = useWallet();
   const navigate = useNavigate();
