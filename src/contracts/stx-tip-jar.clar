@@ -1,3 +1,4 @@
+
 ;; STX Tip Jar Contract
 ;; A simple contract for creating tip jars and receiving STX tips
 
