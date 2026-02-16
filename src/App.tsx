@@ -10,6 +10,7 @@ import TipJarPage from "./pages/TipJarPage";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
