@@ -12,7 +12,24 @@ import { toast } from 'sonner';
 
 
 export function Header() {
-  const { wallet, isConnecting, connect, disconnect } = useWallet();
+  const [signalifyLoading, setSignalifyLoading] = useState(false);
+
+  const handleSignalifyLogin = async () => {
+    setSignalifyLoading(true);
+    try {
+      const user = await signalifyLogin();
+      if (user) {
+        toast.success(`Signed in as ${user.username}`);
+      } else {
+        toast.error('Signalify login cancelled or failed');
+      }
+    } catch {
+      toast.error('Signalify login failed');
+    } finally {
+      setSignalifyLoading(false);
+    }
+  };
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
