@@ -56,18 +56,33 @@ export function Header() {
             </Button>
           </div>
         ) : (
-          <Button
-            onClick={connect}
-            disabled={isConnecting}
-            className="gradient-gold text-primary-foreground flex items-center"
-          >
-            {isConnecting ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Wallet className="w-4 h-4 mr-2" />
-            )}
-            Connect Wallet
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleSignalifyLogin}
+              disabled={signalifyLoading}
+              variant="outline"
+              className="flex items-center"
+            >
+              {signalifyLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Shield className="w-4 h-4 mr-2" />
+              )}
+              Signalify
+            </Button>
+            <Button
+              onClick={connect}
+              disabled={isConnecting}
+              className="gradient-gold text-primary-foreground flex items-center"
+            >
+              {isConnecting ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Wallet className="w-4 h-4 mr-2" />
+              )}
+              Connect Wallet
+            </Button>
+          </div>
         )}
       </div>
     </header>
