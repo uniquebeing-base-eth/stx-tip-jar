@@ -1,11 +1,14 @@
 
 
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWallet } from '@/context/WalletContext';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/stacks';
+import { signalifyLogin } from '@/lib/signalify';
 import logo from '@/assets/logo.png';
-import { Loader2, LogOut, Wallet } from 'lucide-react';
+import { Loader2, LogOut, Wallet, Shield } from 'lucide-react';
+import { toast } from 'sonner';
 
 
 export function Header() {
