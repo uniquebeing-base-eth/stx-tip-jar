@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 
 
 export function Header() {
+  const { wallet, isConnecting, connect, disconnect } = useWallet();
   const [signalifyLoading, setSignalifyLoading] = useState(false);
 
   const handleSignalifyLogin = async () => {
