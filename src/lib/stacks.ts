@@ -2,10 +2,10 @@
 import { connect, disconnect, isConnected, getLocalStorage, request } from '@stacks/connect';
 import { Cl } from '@stacks/transactions';
 
-export const CONTRACT_ADDRESS = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+export const CONTRACT_ADDRESS = 'SPEAZBQ9CRE3PQW8VBE475M1BJT034JBJ02PAPDN';
 export const CONTRACT_NAME = 'stx-tip-jar';
+export const FULL_CONTRACT_ID = `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`;
 export const NETWORK = 'mainnet';
-
 
 export interface WalletData {
   stxAddress: string;
@@ -60,12 +60,11 @@ export function checkWalletConnection(): WalletData | null {
 export async function createTipJar(): Promise<string | null> {
   try {
     const response = await request('stx_callContract', {
-      contractAddress: CONTRACT_ADDRESS,
-      contractName: CONTRACT_NAME,
+      contract: FULL_CONTRACT_ID,
       functionName: 'create-jar',
       functionArgs: [],
-    } as never);
-    return (response as { txid?: string })?.txid || null;
+    });
+    return response?.txid || null;
   } catch (error) {
     console.error('Failed to create tip jar:', error);
     return null;
@@ -75,12 +74,11 @@ export async function createTipJar(): Promise<string | null> {
 export async function sendTip(ownerAddress: string, amountInMicroStx: number): Promise<string | null> {
   try {
     const response = await request('stx_callContract', {
-      contractAddress: CONTRACT_ADDRESS,
-      contractName: CONTRACT_NAME,
+      contract: FULL_CONTRACT_ID,
       functionName: 'tip',
       functionArgs: [Cl.standardPrincipal(ownerAddress), Cl.uint(amountInMicroStx)],
-    } as never);
-    return (response as { txid?: string })?.txid || null;
+    });
+    return response?.txid || null;
   } catch (error) {
     console.error('Failed to send tip:', error);
     return null;
@@ -90,12 +88,11 @@ export async function sendTip(ownerAddress: string, amountInMicroStx: number): P
 export async function withdrawBalance(): Promise<string | null> {
   try {
     const response = await request('stx_callContract', {
-      contractAddress: CONTRACT_ADDRESS,
-      contractName: CONTRACT_NAME,
+      contract: FULL_CONTRACT_ID,
       functionName: 'withdraw',
       functionArgs: [],
-    } as never);
-    return (response as { txid?: string })?.txid || null;
+    });
+    return response?.txid || null;
   } catch (error) {
     console.error('Failed to withdraw:', error);
     return null;

@@ -8,7 +8,6 @@ import { Loader2, Copy, Check, ExternalLink, Sparkles, ArrowDownToLine, Share2 }
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 
-
 export default function Dashboard() {
   const { wallet, connect } = useWallet();
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ export default function Dashboard() {
           description: 'Your STX is on the way to your wallet',
           action: {
             label: 'View',
-            onClick: () => window.open(`https://explorer.stacks.co/txid/${txId}`, '_blank'),
+            onClick: () => window.open(`https://explorer.hiro.so/txid/${txId}`, '_blank'),
           },
         });
       } else {
