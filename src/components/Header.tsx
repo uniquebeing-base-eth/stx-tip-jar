@@ -1,36 +1,13 @@
 
-
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWallet } from '@/context/WalletContext';
 import { Button } from '@/components/ui/button';
 import { formatAddress } from '@/lib/stacks';
-import { signalifyLogin } from '@/lib/signalify';
 import logo from '@/assets/logo.png';
-import { Loader2, LogOut, Wallet, Shield } from 'lucide-react';
-import { toast } from 'sonner';
-
+import { Loader2, LogOut, Wallet } from 'lucide-react';
 
 export function Header() {
   const { wallet, isConnecting, connect, disconnect } = useWallet();
-  const [signalifyLoading, setSignalifyLoading] = useState(false);
-
-  const handleSignalifyLogin = async () => {
-    setSignalifyLoading(true);
-    try {
-      const user = await signalifyLogin();
-      if (user) {
-        toast.success(`Signed in as ${user.username}`);
-      } else {
-        toast.error('Signalify login cancelled or failed');
-      }
-    } catch {
-      toast.error('Signalify login failed');
-    } finally {
-      setSignalifyLoading(false);
-    }
-  };
-
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -56,33 +33,18 @@ export function Header() {
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={handleSignalifyLogin}
-              disabled={signalifyLoading}
-              variant="outline"
-              className="flex items-center"
-            >
-              {signalifyLoading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Shield className="w-4 h-4 mr-2" />
-              )}
-              Signalify
-            </Button>
-            <Button
-              onClick={connect}
-              disabled={isConnecting}
-              className="gradient-gold text-primary-foreground flex items-center"
-            >
-              {isConnecting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Wallet className="w-4 h-4 mr-2" />
-              )}
-              Connect Wallet
-            </Button>
-          </div>
+          <Button
+            onClick={connect}
+            disabled={isConnecting}
+            className="gradient-gold text-primary-foreground flex items-center"
+          >
+            {isConnecting ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Wallet className="w-4 h-4 mr-2" />
+            )}
+            Connect Wallet
+          </Button>
         )}
       </div>
     </header>
