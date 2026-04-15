@@ -226,6 +226,38 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Find a Tip Jar Section */}
+      <section className="py-16">
+        <div className="container">
+          <div className="max-w-xl mx-auto text-center">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
+              Find a Tip Jar
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Enter a Stacks address to view their tip jar
+            </p>
+            
+            <div className="flex gap-2">
+              <Input
+                placeholder="Enter STX address (SP...)"
+                value={searchAddress}
+                onChange={(e) => setSearchAddress(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearchJar()}
+                className="h-12 text-base"
+              />
+              <Button 
+                onClick={handleSearchJar}
+                size="lg"
+                className="h-12 px-6"
+              >
+                <Search className="w-5 h-5 mr-2" />
+                Find
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How it Works */}
       <section className="py-20">
         <div className="container">
