@@ -14,6 +14,7 @@ const Index = () => {
   const { wallet, isConnecting, connect } = useWallet();
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
+  const [searchAddress, setSearchAddress] = useState('');
 
   // Tip form state
   const [tipAddress, setTipAddress] = useState('');
@@ -88,6 +89,14 @@ const Index = () => {
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleSearchJar = () => {
+    if (!searchAddress.trim()) {
+      toast.error('Please enter a Stacks address');
+      return;
+    }
+    navigate(`/jar/${searchAddress.trim()}`);
   };
 
   const handleSearch = () => {
