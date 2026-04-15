@@ -48,7 +48,7 @@ export function TipJarCard({
           action: {
             label: 'View',
             onClick: () =>
-              window.open(`https://explorer.stacks.co/txid/${txId}`, '_blank'),
+              window.open(`https://explorer.hiro.so/txid/${txId}`, '_blank'),
           },
         });
         setAmount('');
@@ -131,7 +131,7 @@ export function TipJarCard({
 
         {/* Explorer Link */}
         <a
-          href={`https://explorer.stacks.co/address/${ownerAddress}`}
+          href={`https://explorer.hiro.so/address/${ownerAddress}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
