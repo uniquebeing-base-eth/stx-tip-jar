@@ -4,7 +4,7 @@ import { useWallet } from '@/context/WalletContext';
 import { useTipJar } from '@/hooks/useTipJar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { withdrawBalance, formatAddress, createTipJar } from '@/lib/stacks';
+import { withdrawBalance, formatAddress, createTipJar, stxToMicroStx } from '@/lib/stacks';
 import { Loader2, Copy, Check, ExternalLink, Sparkles, ArrowDownToLine, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
@@ -39,7 +39,7 @@ export default function Dashboard() {
   const handleWithdraw = async () => {
     setIsWithdrawing(true);
     try {
-      const txId = await withdrawBalance();
+      const txId = await withdrawBalance(stxToMicroStx(balance));
       if (txId) {
         toast.success('Withdrawal initiated!', {
           description: 'Your STX is on the way to your wallet',
