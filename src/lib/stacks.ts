@@ -1,6 +1,6 @@
 
 import { connect, disconnect, isConnected, getLocalStorage, request } from '@stacks/connect';
-import { Cl } from '@stacks/transactions';
+import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
 
 export const CONTRACT_ADDRESS = 'SPEAZBQ9CRE3PQW8VBE475M1BJT034JBJ02PAPDN';
 export const CONTRACT_NAME = 'stx-tip-jar';
@@ -96,6 +96,43 @@ export async function withdrawBalance(): Promise<string | null> {
   } catch (error) {
     console.error('Failed to withdraw:', error);
     return null;
+  }
+}
+
+export async function tipJarExists(ownerAddress: string): Promise<boolean> {
+  try {
+    const result = await fetchCallReadOnlyFunction({
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: CONTRACT_NAME,
+      functionName: 'jar-exists',
+      functionArgs: [Cl.standardPrincipal(ownerAddress)],
+      senderAddress: CONTRACT_ADDRESS,
+    });
+    const json = cvToJSON(result);
+    return json.value === true || json.value === 'true';
+  } catch (error) {
+    console.error('Failed to check jar existence:', error);
+    return false;
+  }
+}
+
+export async function getTipJarBalance(ownerAddress: string): Promise<number> {
+  try {
+    const result = await fetchCallReadOnlyFunction({
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: CONTRACT_NAME,
+      functionName: 'get-jar-balance',
+      functionArgs: [Cl.standardPrincipal(ownerAddress)],
+      senderAddress: CONTRACT_ADDRESS,
+    });
+    const json = cvToJSON(result);
+    if (json.success && json.value?.value) {
+      return microStxToStx(parseInt(json.value.value, 10));
+    }
+    return 0;
+  } catch (error) {
+    console.error('Failed to get jar balance:', error);
+    return 0;
   }
 }
 

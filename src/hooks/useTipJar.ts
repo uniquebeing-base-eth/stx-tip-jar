@@ -1,0 +1,25 @@
+import { useQuery } from '@tanstack/react-query';
+import { tipJarExists, getTipJarBalance } from '@/lib/stacks';
+
+export function useTipJar(address: string | undefined) {
+  const existsQuery = useQuery({
+    queryKey: ['tipJar', 'exists', address],
+    queryFn: () => tipJarExists(address!),
+    enabled: !!address,
+    refetchInterval: 15000,
+  });
+
+  const balanceQuery = useQuery({
+    queryKey: ['tipJar', 'balance', address],
+    queryFn: () => getTipJarBalance(address!),
+    enabled: !!address && existsQuery.data === true,
+    refetchInterval: 15000,
+  });
+
+  return {
+    exists: existsQuery.data ?? false,
+    balance: balanceQuery.data ?? 0,
+    isLoading: existsQuery.isLoading,
+    isError: existsQuery.isError,
+  };
+}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '@/context/WalletContext';
+import { useTipJar } from '@/hooks/useTipJar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { withdrawBalance, formatAddress, createTipJar } from '@/lib/stacks';
@@ -11,13 +12,10 @@ import logo from '@/assets/logo.png';
 export default function Dashboard() {
   const { wallet, connect } = useWallet();
   const navigate = useNavigate();
+  const { exists, balance, isLoading } = useTipJar(wallet?.stxAddress);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  // Mock state - replace with real contract data in production
-  const [hasJar] = useState(true);
-  const balance = 125.5;
 
   if (!wallet) {
     return (
@@ -26,6 +24,14 @@ export default function Dashboard() {
         <Button onClick={connect} className="gradient-gold text-primary-foreground">
           Connect Wallet
         </Button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -58,7 +64,7 @@ export default function Dashboard() {
       const txId = await createTipJar();
       if (txId) {
         toast.success('Tip jar created!', {
-          description: 'Transaction submitted to the network',
+          description: 'Transaction submitted. It may take a few minutes to confirm.',
         });
       }
     } catch {
@@ -76,7 +82,7 @@ export default function Dashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!hasJar) {
+  if (!exists) {
     return (
       <div className="min-h-screen pt-24 pb-12">
         <div className="container max-w-md">
@@ -119,7 +125,7 @@ export default function Dashboard() {
             <p className="text-5xl font-display font-bold text-gradient-gold mb-6">
               {balance.toFixed(2)} STX
             </p>
-            
+
             <Button
               onClick={handleWithdraw}
               disabled={isWithdrawing || balance <= 0}
@@ -147,7 +153,7 @@ export default function Dashboard() {
                 {copied ? <Check className="w-4 h-4 text-green" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
-            
+
             <div className="flex gap-2">
               <Button
                 variant="outline"
