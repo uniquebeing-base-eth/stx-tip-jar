@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '@/context/WalletContext';
 import { useTipJar } from '@/hooks/useTipJar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { withdrawBalance, formatAddress, createTipJar, stxToMicroStx } from '@/lib/stacks';
+import {
+  clearPendingTipJarCreate,
+  getPendingTipJarCreate,
+  setPendingTipJarCreate,
+} from '@/lib/pendingTipJar';
 import { Loader2, Copy, Check, ExternalLink, Sparkles, ArrowDownToLine, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
@@ -12,10 +18,28 @@ import logo from '@/assets/logo.png';
 export default function Dashboard() {
   const { wallet, connect } = useWallet();
   const navigate = useNavigate();
-  const { exists, balance, isLoading } = useTipJar(wallet?.stxAddress);
+  const queryClient = useQueryClient();
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [pendingCreate, setPendingCreate] = useState(() => getPendingTipJarCreate(undefined));
+
+  const walletAddress = wallet?.stxAddress;
+
+  useEffect(() => {
+    setPendingCreate(getPendingTipJarCreate(walletAddress));
+  }, [walletAddress]);
+
+  const refetchInterval = useMemo(() => (pendingCreate ? 5000 : 15000), [pendingCreate]);
+  const { exists, balance, isLoading } = useTipJar(walletAddress, { refetchInterval });
+
+  useEffect(() => {
+    if (!walletAddress || !exists || !pendingCreate) return;
+
+    clearPendingTipJarCreate(walletAddress);
+    setPendingCreate(null);
+    queryClient.invalidateQueries({ queryKey: ['tipJar', 'balance', walletAddress] });
+  }, [exists, pendingCreate, queryClient, walletAddress]);
 
   if (!wallet) {
     return (
@@ -63,8 +87,16 @@ export default function Dashboard() {
     try {
       const txId = await createTipJar();
       if (txId) {
+        setPendingTipJarCreate(wallet.stxAddress, txId);
+        setPendingCreate(getPendingTipJarCreate(wallet.stxAddress));
+        queryClient.invalidateQueries({ queryKey: ['tipJar', 'exists', wallet.stxAddress] });
+        queryClient.invalidateQueries({ queryKey: ['tipJar', 'balance', wallet.stxAddress] });
         toast.success('Tip jar created!', {
           description: 'Transaction submitted. It may take a few minutes to confirm.',
+          action: {
+            label: 'View',
+            onClick: () => window.open(`https://explorer.hiro.so/txid/${txId}`, '_blank'),
+          },
         });
       }
     } catch {
@@ -81,6 +113,34 @@ export default function Dashboard() {
     toast.success('Link copied!');
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (!exists && pendingCreate) {
+    return (
+      <div className="min-h-screen pt-24 pb-12">
+        <div className="container max-w-md">
+          <Card className="text-center shadow-glow border-2 border-gold/20">
+            <CardContent className="pt-8 pb-8 space-y-4">
+              <Loader2 className="w-10 h-10 mx-auto animate-spin text-muted-foreground" />
+              <div className="space-y-2">
+                <h2 className="font-display text-xl font-bold">Tip Jar Pending Confirmation</h2>
+                <p className="text-muted-foreground text-sm">
+                  Your transaction was submitted. We&apos;re checking the chain and will update this page automatically.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => window.open(`https://explorer.hiro.so/txid/${pendingCreate.txId}`, '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                View Transaction
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   if (!exists) {
     return (
