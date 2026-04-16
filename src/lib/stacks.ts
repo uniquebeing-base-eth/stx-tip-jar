@@ -1,6 +1,6 @@
 
 import { connect, disconnect, isConnected, getLocalStorage, request } from '@stacks/connect';
-import { Cl } from '@stacks/transactions';
+import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
 
 export const CONTRACT_ADDRESS = 'SPEAZBQ9CRE3PQW8VBE475M1BJT034JBJ02PAPDN';
 export const CONTRACT_NAME = 'stx-tip-jar';
