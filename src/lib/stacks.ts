@@ -1,6 +1,12 @@
 
 import { connect, disconnect, isConnected, getLocalStorage, request } from '@stacks/connect';
-import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
+import {
+  Cl,
+  fetchCallReadOnlyFunction,
+  cvToJSON,
+  Pc,
+  PostConditionMode,
+} from '@stacks/transactions';
 
 export const CONTRACT_ADDRESS = 'SPEAZBQ9CRE3PQW8VBE475M1BJT034JBJ02PAPDN';
 export const CONTRACT_NAME = 'stx-tip-jar';
@@ -73,10 +79,20 @@ export async function createTipJar(): Promise<string | null> {
 
 export async function sendTip(ownerAddress: string, amountInMicroStx: number): Promise<string | null> {
   try {
+    const sender = checkWalletConnection()?.stxAddress;
+    if (!sender) {
+      console.error('No connected wallet found');
+      return null;
+    }
+    // Post-condition: sender will transfer EXACTLY `amountInMicroStx` uSTX to the contract.
+    const postCondition = Pc.principal(sender).willSendEq(amountInMicroStx).ustx();
+
     const response = await request('stx_callContract', {
       contract: FULL_CONTRACT_ID,
       functionName: 'tip',
       functionArgs: [Cl.standardPrincipal(ownerAddress), Cl.uint(amountInMicroStx)],
+      postConditions: [postCondition],
+      postConditionMode: PostConditionMode.Deny,
     });
     return response?.txid || null;
   } catch (error) {
@@ -85,12 +101,20 @@ export async function sendTip(ownerAddress: string, amountInMicroStx: number): P
   }
 }
 
-export async function withdrawBalance(): Promise<string | null> {
+export async function withdrawBalance(currentBalanceMicroStx: number): Promise<string | null> {
   try {
+    // Post-condition: the contract will send AT MOST the current balance to the caller.
+    // Using `willSendLte` because the on-chain balance could differ slightly from what UI fetched.
+    const postCondition = Pc.principal(FULL_CONTRACT_ID)
+      .willSendLte(currentBalanceMicroStx)
+      .ustx();
+
     const response = await request('stx_callContract', {
       contract: FULL_CONTRACT_ID,
       functionName: 'withdraw',
       functionArgs: [],
+      postConditions: [postCondition],
+      postConditionMode: PostConditionMode.Deny,
     });
     return response?.txid || null;
   } catch (error) {
