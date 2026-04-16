@@ -1,11 +1,13 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '@/context/WalletContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { createTipJar, sendTip, stxToMicroStx } from '@/lib/stacks';
+import { setPendingTipJarCreate } from '@/lib/pendingTipJar';
 import { Loader2, ArrowRight, Sparkles, Heart, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
@@ -13,6 +15,7 @@ import logo from '@/assets/logo.png';
 const Index = () => {
   const { wallet, isConnecting, connect } = useWallet();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [searchAddress, setSearchAddress] = useState('');
 
@@ -33,6 +36,9 @@ const Index = () => {
     try {
       const txId = await createTipJar();
       if (txId) {
+        setPendingTipJarCreate(wallet.stxAddress, txId);
+        queryClient.invalidateQueries({ queryKey: ['tipJar', 'exists', wallet.stxAddress] });
+        queryClient.invalidateQueries({ queryKey: ['tipJar', 'balance', wallet.stxAddress] });
         toast.success('Tip jar created!', {
           description: 'Transaction submitted. View your dashboard once confirmed.',
           action: {
