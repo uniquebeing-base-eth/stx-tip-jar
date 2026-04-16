@@ -87,7 +87,7 @@ export async function sendTip(ownerAddress: string, amountInMicroStx: number): P
     // Post-condition: sender will transfer EXACTLY `amountInMicroStx` uSTX to the contract.
     const postCondition = Pc.principal(sender).willSendEq(amountInMicroStx).ustx();
 
-    const response = await request('stx_callContract', {
+    const response = await (request as any)('stx_callContract', {
       contract: FULL_CONTRACT_ID,
       functionName: 'tip',
       functionArgs: [Cl.standardPrincipal(ownerAddress), Cl.uint(amountInMicroStx)],
@@ -109,7 +109,7 @@ export async function withdrawBalance(currentBalanceMicroStx: number): Promise<s
       .willSendLte(currentBalanceMicroStx)
       .ustx();
 
-    const response = await request('stx_callContract', {
+    const response = await (request as any)('stx_callContract', {
       contract: FULL_CONTRACT_ID,
       functionName: 'withdraw',
       functionArgs: [],
